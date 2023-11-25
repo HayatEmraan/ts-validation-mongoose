@@ -1,3 +1,6 @@
+import { Model } from 'mongoose'
+
+
 type Parent = {
   fatherInfo: {
     name: string
@@ -29,6 +32,7 @@ export type Student = {
   class: string
   rollNo: number
   contactNo: string
+  password: string
   address: string
   email: string
   gender: 'female' | 'male' | 'other'
@@ -38,3 +42,19 @@ export type Student = {
   createdAt: Date
   updatedAt: Date
 }
+
+// export type ExistingStudent = {
+//   isExisting(id: string): Promise<Student | null>
+// }
+
+// export type StudentModelExisting = Model<
+//   Student,
+//   Record<string, never>,
+//   ExistingStudent
+// >
+
+export interface ExistingStudent extends Model<Student> {
+  isExisting(id: string): Promise<Student | null>
+}
+
+

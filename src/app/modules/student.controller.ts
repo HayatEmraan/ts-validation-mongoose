@@ -1,18 +1,33 @@
 import { Request, Response } from 'express'
 import { StudentDB, getStudentDB, getStudentsDB } from './student.service'
-import { JoiValidation } from './student.validate'
+import { ZodValidation } from './student.validate'
+// import { JoiValidation } from './student.validate'
 
 export const createStudent = async (req: Request, res: Response) => {
   try {
     const body = await req.body
-    const joiValidate = await JoiValidation.validate(body)
-    if (joiValidate.error) {
+
+    // joi validation
+    // const joiValidate = await JoiValidation.validate(body)
+    // if (joiValidate.error) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: joiValidate.error,
+    //   })
+    // }
+
+    // zod validation
+
+    const zodValidate = ZodValidation.safeParse(body)
+
+    if (!zodValidate.success) {
       return res.status(400).json({
         success: false,
-        message: joiValidate.error,
+        error: zodValidate,
       })
     }
-    const result = await StudentDB(body)
+
+    const result = (await StudentDB(body));
     return res.status(200).json({
       success: true,
       message: 'Student created successfully',
